@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cf5c7f3f-4027-4c08-96aa-bd6ee6d69d44" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/simple_backtest.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/event.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/signal_handler.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/zrc20010410/simple_backtest.git",
+    "accountId": "bfd669d3-bdf0-488b-b1fe-d10355e0e13c"
+  }
+}]]></component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.6830201283771977" />
+      <entry key="MS500" value="1.9265880618903708" />
+      <entry key="S2" value="1.9811189749983202" />
+      <entry key="S5" value="1.9924062412513526" />
+      <entry key="S10" value="1.9981249354502615" />
+      <entry key="S30" value="2.2412080823994027" />
+      <entry key="S60" value="3.2210723248191324" />
+      <entry key="M2" value="5.762296297280457" />
+      <entry key="M5" value="11.660350227373218" />
+      <entry key="M10" value="18.329283695388405" />
+      <entry key="M15" value="23.254708597788607" />
+      <entry key="M30" value="32.677581864388344" />
+      <entry key="H1" value="44.87111229374426" />
+      <entry key="H2" value="71.45176911362317" />
+      <entry key="H4" value="116.9735876974531" />
+      <entry key="D1" value="214.26806924773382" />
+      <entry key="W1" value="241.93639450017923" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="8.716583572717497E-198" />
+      <entry key="S2" value="5.433586367440031E-50" />
+      <entry key="S5" value="1.9680432115981482E-20" />
+      <entry key="S10" value="1.4028696345740423E-10" />
+      <entry key="S30" value="5.197567831810485E-4" />
+      <entry key="S60" value="0.02349934383055787" />
+      <entry key="M2" value="0.20604184388084737" />
+      <entry key="M5" value="1.4932755250857075" />
+      <entry key="M10" value="4.236657168902484" />
+      <entry key="M15" value="6.743353453496598" />
+      <entry key="M30" value="12.217339920482138" />
+      <entry key="H1" value="18.84016920607039" />
+      <entry key="H2" value="28.945875618609918" />
+      <entry key="H4" value="42.92600051187289" />
+      <entry key="D1" value="69.49996559306328" />
+      <entry key="W1" value="76.69467175202031" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.787201475994902" />
+      <entry key="MS500" value="1.4902532163022273" />
+      <entry key="S2" value="1.845815631234456" />
+      <entry key="S5" value="1.935790827183293" />
+      <entry key="S10" value="1.9693818913090317" />
+      <entry key="S30" value="2.2316838393572245" />
+      <entry key="S60" value="3.2370202252558182" />
+      <entry key="M2" value="5.959298297737723" />
+      <entry key="M5" value="13.1415076326901" />
+      <entry key="M10" value="22.55273000483029" />
+      <entry key="M15" value="29.98529033756295" />
+      <entry key="M30" value="44.88448760705241" />
+      <entry key="H1" value="63.703484378415865" />
+      <entry key="H2" value="100.39123312636129" />
+      <entry key="H4" value="159.89435063569712" />
+      <entry key="D1" value="283.7664602453791" />
+      <entry key="W1" value="318.63081318485365" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3MOxGVG7ShQt2bU1iIHbUUthsRr" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.data_handler.executor": "Run",
+    "Python.signal_handler.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "E:/Code/simple_backtest",
+    "node.js.detected.package.jshint": "true",
+    "node.js.selected.package.jshint": "",
+    "nodejs_package_manager_path": "npm",
+    "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Code\simple_backtest" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Code\simple_backtest\test" />
+      <recent name="E:\Code\simple_backtest" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-3c73f5f83ce7-5c0e4880bfa8-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.12573.39" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cf5c7f3f-4027-4c08-96aa-bd6ee6d69d44" name="Changes" comment="" />
+      <created>1795235319861</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1795235319861</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
