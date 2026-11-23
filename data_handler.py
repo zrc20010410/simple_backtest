@@ -1,10 +1,8 @@
+import os
 from datetime import date
 from pathlib import Path
-
-import os
 import pandas as pd
-
-
+from math import isfinite
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parents[0] / "data"
 DEFAULT_DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -14,9 +12,7 @@ DEFAULT_TRADE_DATES_FILE = DEFAULT_DATA_DIR / "trade_dates.csv"
 
 def _tushare_client():
     import tushare as ts
-
     return ts.pro_api(os.environ["TUSHARE_TOKEN"])
-
 
 class DataHandler:
     def __init__(self, symbol_list, start_date, end_date):
@@ -30,7 +26,6 @@ class DataHandler:
     @staticmethod
     def save_data_to_csv(symbol_list, start_date, end_date):
         pro = _tushare_client()
-
         # 保存股票行情信息
         frames = []
         for symbol in symbol_list:
@@ -61,7 +56,6 @@ class DataHandler:
     @staticmethod
     def save_trade_dates_to_csv(start_date, end_date):
         pro = _tushare_client()
-
         # 保存交易日列表
         calendar = pro.trade_cal(exchange="SSE", start_date=start_date, end_date=end_date)
         trade_dates = sorted(
@@ -70,7 +64,6 @@ class DataHandler:
         pd.DataFrame({"trade_date": trade_dates}).to_csv(DEFAULT_TRADE_DATES_FILE, index=False)
 
     def read_data_from_csv(self):
-
         prices = pd.read_csv(DEFAULT_PRICE_FILE, dtype={"ts_code": str, "trade_date": str})
 
         period_prices = prices.loc[
@@ -88,27 +81,48 @@ class DataHandler:
         return sorted(selected.tolist())
 
     def get_value(self, symbol: str, datetime: str | int | date, value_type: str):
-
         trade_date = datetime.strftime("%Y%m%d") if isinstance(datetime, date) else str(datetime)
+
+        if symbol not in self.data:
+            raise KeyError(f"没有股票 {symbol} 的行情数据")
+
         prices = self.data[symbol]
+        if value_type not in prices.columns:
+            raise KeyError(f"{symbol} 的行情中没有字段 {value_type}")
+
         values = prices.loc[prices["trade_date"] == trade_date, value_type]
-        return values.item()
+        if values.empty:
+            raise KeyError(f"{symbol} 在 {trade_date} 没有行情记录")
+
+        value = values.item()
+        if pd.isna(value):
+            raise ValueError(f"{symbol} 在 {trade_date} 的 {value_type} 缺失")
+
+        if value_type in {"open", "high", "low", "close", "pre_close"}:
+            price = pd.to_numeric(str(value), errors="coerce")
+            if not isfinite(price) or price <= 0:
+                raise ValueError(f"{symbol} 在 {trade_date} 的 {value_type} 无效：{value!r}")
+            return float(price)
+
+        return value
 
     def get_valuation_close(self, symbol: str, datetime: str | int | date):
-
         trade_date = datetime.strftime("%Y%m%d") if isinstance(datetime, date) else str(datetime)
         prices = self.data[symbol]
         dates = prices["trade_date"]
-        pre_prices = prices.loc[
-            (dates <= trade_date)
-            & dates.isin(self.trade_dates)
-            & prices['close'].notna()
-            ]
-        if pre_prices.empty:
+
+        close = pd.to_numeric(prices["close"].astype("string"), errors="coerce")
+        valid = (
+                dates.le(trade_date)
+                & dates.isin(self.trade_dates)
+                & close.gt(0)
+                & close.lt(float("inf"))
+        )
+        if not valid.any():
             raise ValueError(f"{symbol} 在 {trade_date} 及之前没有可用的收盘价")
 
-        latest_date = pre_prices["trade_date"].max()
-        return pre_prices.loc[pre_prices["trade_date"] == latest_date, 'close'].item()
+        latest_date = dates.loc[valid].max()
+        return float(close.loc[valid & dates.eq(latest_date)].item())
 
 if __name__ == "__main__":
 

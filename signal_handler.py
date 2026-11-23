@@ -4,32 +4,28 @@ import pandas as pd
 from event import SignalEvent
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parents[0] / "data"
-
+DEFAULT_SIGNAL_DIR = DEFAULT_DATA_DIR / 'signals.csv'
 SIGNAL_COLUMNS = ["datetime", "symbol", "signal_type", "quantity"]
 
 
 class SignalHandler:
 
-    def __init__(self, signals: pd.DataFrame, refresh_signals: bool = False):
-
-        path = DEFAULT_DATA_DIR / "signals.csv"
-
+    def __init__(self, signals: pd.DataFrame | None = None, refresh_signals: bool = False):
         if refresh_signals:
-            self.save_signals_to_csv(signals, path)
+            if signals is None:
+                raise ValueError("refresh_signals=True 时必须传入 signals")
+            self.save_signals_to_csv(signals)
 
-        self.signals = self.read_signals_from_csv(path)
-
-    @staticmethod
-    def save_signals_to_csv(signals: pd.DataFrame, path) -> Path:
-
-        signals.to_csv(path, columns=SIGNAL_COLUMNS, index=False)
-        return path
+        self.signals = self.read_signals_from_csv()
 
     @staticmethod
-    def read_signals_from_csv(path) -> dict[str, list[SignalEvent]]:
+    def save_signals_to_csv(signals: pd.DataFrame):
+        signals.to_csv(DEFAULT_SIGNAL_DIR, columns=SIGNAL_COLUMNS, index=False)
+
+    def read_signals_from_csv(self) -> dict[str, list[SignalEvent]]:
         signals: dict[str, list[SignalEvent]] = {}
 
-        data = pd.read_csv(path, dtype={"datetime": str, "symbol": str})
+        data = pd.read_csv(DEFAULT_SIGNAL_DIR, dtype={"datetime": str, "symbol": str})
         for row in data.itertuples(index=False):
             signal = SignalEvent(
                 datetime=row.datetime,

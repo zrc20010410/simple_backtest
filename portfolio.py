@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from data_handler import DataHandler
+from event import FillEvent
 
 
 @dataclass
@@ -59,7 +60,7 @@ class Portfolio:
             equity=self.cash + sum(market_values.values()),
         )
 
-    def update_fill(self, event):
+    def update_portfolio(self, event : FillEvent):
 
         if event.type != "FILL":
             return

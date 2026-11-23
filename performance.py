@@ -50,7 +50,7 @@ class PerformanceReport:
         return pd.Series({
             "期初资金": self.initial_capital,
             "期末总资产": self.daily_snapshot["equity"].iloc[-1],
-            "累计收益率": self.daily_snapshot["cumulative_return"].iloc[-1] - 1,
+            "累计收益率": self.daily_snapshot["cumulative_return"].iloc[-1],
             "年化收益率": annual_return,
             "年化波动率": volatility,
             "最大回撤": abs(self.daily_snapshot["drawdown"].min()),
