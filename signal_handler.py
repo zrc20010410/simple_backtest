@@ -26,10 +26,10 @@ class SignalHandler:
         return path
 
     @staticmethod
-    def read_signals_from_csv(path):
+    def read_signals_from_csv(path) -> dict[str, list[SignalEvent]]:
+        signals: dict[str, list[SignalEvent]] = {}
 
         data = pd.read_csv(path, dtype={"datetime": str, "symbol": str})
-        signals: dict[str, list[SignalEvent]] = {}
         for row in data.itertuples(index=False):
             signal = SignalEvent(
                 datetime=row.datetime,
@@ -43,9 +43,10 @@ class SignalHandler:
 
 if __name__ == "__main__":
     signals = pd.DataFrame({
-        "datetime": ["20260102", "20260102", "20260102", "20260103", "20260104", "20260105"],
-        "symbol": ["000001.SZ", "000011.SZ", "000025.SZ", "000001.SZ", "000001.SZ", "000001.SZ"],
-        "signal_type": ["BUY", "BUY", "BUY", "BUY", "SELL", "SELL"],
-        "quantity": [100, 100, 100, 300, 200, 200],
+        "datetime": ["20260105", "20260105", "20260105", "20260106", "20260107", "20260108", "20260108", "20260108", ],
+        "symbol": ["000001.SZ", "000011.SZ", "000025.SZ", "000001.SZ", "000001.SZ", "000001.SZ", "000011.SZ",
+                   "000025.SZ", ],
+        "signal_type": ["BUY", "BUY", "BUY", "BUY", "SELL", "SELL", "SELL", "SELL"],
+        "quantity": [10000, 10000, 10000, 30000, 20000, 20000, 10000, 10000, ],
     })
     signal_handler = SignalHandler(signals, True)

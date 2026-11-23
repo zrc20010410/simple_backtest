@@ -1,4 +1,4 @@
-from ..event import FillEvent
+from event import FillEvent
 from .abs_execution import ExecutionHandler
 from data_handler import DataHandler
 
@@ -12,7 +12,7 @@ class SimulatedExecutionHandler(ExecutionHandler):
     def execute_order(self, event):
         if event.type == 'SIGNAL':
             fill_event = FillEvent(
-                event.datetime, event.symbol,'Test_Exchange', event.quantity, event.direction,
+                event.datetime, event.symbol,'Test_Exchange', event.quantity, event.signal_type,
                 self.data_handler.get_value(event.symbol,event.datetime,  "open")
             )
             self.events.put(fill_event)

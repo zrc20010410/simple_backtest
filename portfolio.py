@@ -1,4 +1,3 @@
-"""现金账户的持仓、逐日估值与成交记账。"""
 from dataclasses import dataclass
 from data_handler import DataHandler
 
@@ -24,30 +23,35 @@ class Portfolio:
         self.positions = dict.fromkeys(data_handler.symbol_list, 0)
         self.cash = init_capital
         self.total_commission = 0.0
-        self.history = {}
+        self.history: dict[str, Snapshot] = {}
 
     @property
-    def market_values(self):
-        """各标的市值 = 持仓数量 × 最新估值价格。"""
-        values = {}
+    def market_values(self) -> dict[str, float]:
+        """返回最近一次收盘时各标的的市值，首次收盘前均为零。"""
+        if not self.history:
+            return dict.fromkeys(self.positions, 0.0)
+
+        snapshot = next(reversed(self.history.values()))
+        return snapshot.market_values.copy()
+
+    @property
+    def equity(self) -> float:
+        """返回最近一次收盘时的账户总资产，首次收盘前为初始资金。"""
+        if not self.history:
+            return self.init_capital
+
+        snapshot = next(reversed(self.history.values()))
+        return snapshot.equity
+
+    def record_daily_snapshot(self, trade_date: str) -> None:
+
+        market_values = dict.fromkeys(self.positions, 0.0)
         for symbol, quantity in self.positions.items():
-            if quantity == 0:
-                values[symbol] = 0.0
-                continue
+            if quantity:
+                close = self.data_handler.get_valuation_close(symbol, trade_date)
+                market_values[symbol] = quantity * close
 
-            close = self.data_handler.get_value(symbol, self.events.datetime, "close")
-            values[symbol] = quantity * close
-
-        return values
-
-    @property
-    def equity(self):
-        """账户总资产（现金加持仓市值）。"""
-        return self.cash + sum(self.market_values.values())
-
-    def _record(self, datetime):
-        market_values = self.market_values
-        self.history[datetime] = Snapshot(
+        self.history[trade_date] = Snapshot(
             positions=self.positions.copy(),
             market_values=market_values,
             cash=self.cash,
@@ -56,7 +60,7 @@ class Portfolio:
         )
 
     def update_fill(self, event):
-        """按成交单价结算，手续费只扣一次；同日成交会更新当天快照。"""
+
         if event.type != "FILL":
             return
 
@@ -64,4 +68,3 @@ class Portfolio:
         self.positions[event.symbol] += quantity
         self.cash -= (quantity * event.fill_price + event.commission)
         self.total_commission += event.commission
-        self._record(event.datetime)

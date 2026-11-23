@@ -5,7 +5,7 @@ from signal_handler import SignalHandler
 from portfolio import Portfolio
 from riskmanager.simple_riskmanager import SimpleRiskManager
 from execution.simulated_execution import SimulatedExecutionHandler
-
+from performance import PerformanceReport
 
 class Backtest(object):
     """
@@ -39,14 +39,18 @@ class Backtest(object):
         """
         self.data_handler = self.data_handler_cls(self.symbol_list, self.start_date, self.end_date)
         self.portfolio = self.portfolio_cls(self.events, self.data_handler, self.start_date, self.init_capital)
-        self.risk_manager = self.risk_manager_cls(self.events, self.data_handler, self.portfolio)
+        self.risk_manager = self.risk_manager_cls()
         self.execution_handler = self.execution_handler_cls(self.events, self.data_handler)
 
     def _run_backtest(self):
         """
         回测主循环
         """
-        for trade_date, daily_signals in sorted(self.signals.items()):
+        trade_dates = self.data_handler.trade_dates
+
+        for trade_date in trade_dates:
+            daily_signals = self.signals.get(trade_date, [])
+
             for signal in daily_signals:
                 self.events.put(signal)
 
@@ -57,9 +61,19 @@ class Backtest(object):
                     break
 
                 if event.type == "SIGNAL":
-                    self.execution_handler.execute_signal(event)
+                    self.execution_handler.execute_order(event)
                 elif event.type == "FILL":
                     self.portfolio.update_fill(event)
 
+            self.portfolio.record_daily_snapshot(trade_date)
+
+    def _perform_backtest(self):
+        report = PerformanceReport(self.portfolio.history, self.portfolio.init_capital)
+        report.print_summary()  # 期初资金、期末总资产、累计和年化收益率、波动率、最大回撤、夏普比率
+        print(report.daily_snapshot)  # 每日总资产、日收益率、单位净值、累计收益率和回撤
+        report.plot(benchmark=self.benchmark)  # 展示策略、基准净值和策略回撤
+
+
     def run_backtest(self):
         self._run_backtest()
+        self._perform_backtest()
