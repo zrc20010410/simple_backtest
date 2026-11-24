@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
-from math import isclose, isfinite, sqrt
+from math import isclose, sqrt
 from typing import Mapping
 from portfolio import Snapshot
 import pandas as pd
 
-from data_handler import DEFAULT_INDEX_FILE
+from datahandler.data_handler import DEFAULT_INDEX_FILE
 
 
 class PerformanceReport:

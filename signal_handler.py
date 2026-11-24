@@ -1,17 +1,16 @@
 from pathlib import Path
-
 import pandas as pd
 from event import SignalEvent
 
-DEFAULT_DATA_DIR = Path(__file__).resolve().parents[0] / "data"
-DEFAULT_SIGNAL_DIR = DEFAULT_DATA_DIR / 'signals.csv'
-SIGNAL_COLUMNS = ["datetime", "symbol", "signal_type", "quantity"]
-
+DEFAULT_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+DEFAULT_STOCKS_DIR = DEFAULT_DATA_DIR / "stocks"
+DEFAULT_SIGNAL_DIR = DEFAULT_STOCKS_DIR / 'signals.csv'
+SIGNAL_COLUMNS = ["datetime", "symbol", "direction", "quantity"]
 
 class SignalHandler:
 
-    def __init__(self, signals: pd.DataFrame | None = None, refresh_signals: bool = False):
-        if refresh_signals:
+    def __init__(self, signals: pd.DataFrame | None = None, update_signals: bool = False):
+        if update_signals:
             if signals is None:
                 raise ValueError("refresh_signals=True 时必须传入 signals")
             self.save_signals_to_csv(signals)
@@ -30,19 +29,31 @@ class SignalHandler:
             signal = SignalEvent(
                 datetime=row.datetime,
                 symbol=row.symbol,
-                signal_type=row.signal_type,
+                direction=row.direction,
                 quantity=row.quantity,
             )
             signals.setdefault(row.datetime, []).append(signal)
 
         return signals
 
+class OptionsSignalHandler:
+
+    def __init__(self, signals: pd.DataFrame | None = None, update_signals: bool = False):
+        pass
+
+    @staticmethod
+    def save_signals_to_csv(signals: pd.DataFrame):
+        pass
+
+    def read_signals_from_csv(self) -> dict[str, list[SignalEvent]]:
+        pass
+
 if __name__ == "__main__":
     signals = pd.DataFrame({
         "datetime": ["20260105", "20260105", "20260105", "20260106", "20260107", "20260108", "20260108", "20260108", ],
         "symbol": ["000001.SZ", "000011.SZ", "000025.SZ", "000001.SZ", "000001.SZ", "000001.SZ", "000011.SZ",
                    "000025.SZ", ],
-        "signal_type": ["BUY", "BUY", "BUY", "BUY", "SELL", "SELL", "SELL", "SELL"],
+        "direction": ["BUY", "BUY", "BUY", "BUY", "SELL", "SELL", "SELL", "SELL"],
         "quantity": [10000, 10000, 10000, 30000, 20000, 20000, 10000, 10000, ],
     })
     signal_handler = SignalHandler(signals, True)

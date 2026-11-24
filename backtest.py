@@ -1,10 +1,10 @@
 import queue
 from queue import Empty
-from data_handler import DataHandler
+from datahandler.abs_data_handler import ABSDataHandler
 from signal_handler import SignalHandler
-from portfolio import Portfolio
-from riskmanager.simple_riskmanager import SimpleRiskManager
-from execution.simulated_execution import SimulatedExecutionHandler
+from portfolio.abs_portfolio import ABSPortfolio
+from riskmanager.abs_riskmanager import RiskManager
+from execution.abs_execution import ExecutionHandler
 from performance import PerformanceReport
 from trade_log import TradeLog
 
@@ -12,11 +12,10 @@ class Backtest(object):
     """
     回测类
     """
-
     def __init__(self, symbol_list, start_date, end_date, init_capital,
-                 data_handler: type[DataHandler], signals_handler : SignalHandler,
-                 risk_manager: type[SimpleRiskManager], execution_handler: type[SimulatedExecutionHandler],
-                 portfolio: type[Portfolio], benchmark):
+                 data_handler: type[ABSDataHandler], signals_handler : SignalHandler,
+                 risk_manager: type[RiskManager], execution_handler: type[ExecutionHandler],
+                 portfolio: type[ABSPortfolio], benchmark):
         self.symbol_list = symbol_list
         self.start_date = start_date
         self.end_date = end_date
@@ -30,9 +29,6 @@ class Backtest(object):
         self.signals_handler = signals_handler
         self.signals = signals_handler.signals
         self.benchmark = benchmark
-        self.events = queue.Queue()
-
-        self._create_trading_instances()
 
     def _create_trading_instances(self):
         """
@@ -53,27 +49,27 @@ class Backtest(object):
             for signal in self.signals.get(trade_date, []):
                 self.events.put(signal)
 
-            while True:
-                try:
-                    event = self.events.get_nowait()
-                except Empty:
-                    break
-                if event.type == "SIGNAL":
-                    reason = self.risk_manager.risk_manager(event)
-                    if reason is None:
-                        self.execution_handler.execute_order(event)
-                    else:
-                        print(f"无效订单{event.datetime} {event.symbol} {event.signal_type} {event.quantity} 股：{reason}")
-                elif event.type == "FILL":
-                    self.trade_log.record_fill(event)
+                while True:
+                    try:
+                        event = self.events.get_nowait()
+                    except Empty:
+                        break
+                    if event.type == "SIGNAL":
+                        reason = self.risk_manager.risk_manager(event)
+                        if reason is None:
+                            self.execution_handler.execute_order(event)
+                        else:
+                            print(f"无效订单{event.datetime} {event.symbol} {event.signal_type} {event.quantity} 股：{reason}")
+                    elif event.type == "FILL":
+                        self.trade_log.record_fill(event)
 
             self.portfolio.record_daily_snapshot(trade_date)
 
     def _perform_backtest(self):
         report = PerformanceReport(self.portfolio.history, self.portfolio.init_capital)
-        report.print_summary()  # 期初资金、期末总资产、累计和年化收益率、波动率、最大回撤、夏普比率
-        print(report.daily_snapshot)  # 每日总资产、日收益率、单位净值、累计收益率和回撤
-        report.plot(benchmark=self.benchmark)  # 展示策略、基准净值和策略回撤
+        report.print_summary()
+        print(report.daily_snapshot)
+        report.plot(benchmark=self.benchmark)
 
     def _print_trade_log(self):
         print(f"本次回测共成交 {len(self.trade_log.trades)} 笔")
@@ -85,10 +81,12 @@ class Backtest(object):
                 trade.quantity,
                 trade.fill_price,
                 trade.amount,
-                trade.commission,
+                f"{trade.commission:.2f}"
             )
 
     def run_backtest(self):
+        self.events = queue.Queue()
+        self._create_trading_instances()
         self._run_backtest()
         self._perform_backtest()
         self._print_trade_log()
