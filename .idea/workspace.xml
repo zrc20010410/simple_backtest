@@ -5,18 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf5c7f3f-4027-4c08-96aa-bd6ee6d69d44" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/trade_log.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/backtest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/indexes.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/price_20260101_20260401.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/prices.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/signals.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_handler.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/datahandler/abs_data_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/datahandler/abs_data_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datahandler/data_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/datahandler/data_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event.py" beforeDir="false" afterPath="$PROJECT_DIR$/event.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event_v2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/execution/options_execution.py" beforeDir="false" afterPath="$PROJECT_DIR$/execution/options_execution.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mo_datahandler_v2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mo_margin_v2.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/performance.py" beforeDir="false" afterPath="$PROJECT_DIR$/performance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio.py" beforeDir="false" afterPath="$PROJECT_DIR$/portfolio.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/riskmanager/simple_riskmanager.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskmanager/simple_riskmanager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/signal_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/signal_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/ema_strategy_test.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/signal_test.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/simple_riskmanager_test.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/tushare_data_handler_test.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/portfolio.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskmanager/options_riskmanager.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskmanager/options_riskmanager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trade_log_v2.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,61 +59,61 @@
 }</component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.5583012016354784E-68" />
-      <entry key="MS500" value="6.544171670900545E-14" />
-      <entry key="S2" value="0.0013097187346655635" />
-      <entry key="S5" value="0.19413788173339444" />
-      <entry key="S10" value="1.1264755307049157" />
-      <entry key="S30" value="3.79086179346783" />
-      <entry key="S60" value="5.363618217035795" />
-      <entry key="M2" value="7.084353788613771" />
-      <entry key="M5" value="10.237932012582771" />
-      <entry key="M10" value="12.96877480070042" />
-      <entry key="M15" value="14.788276315091464" />
-      <entry key="M30" value="19.701452880264316" />
-      <entry key="H1" value="31.920000856291132" />
-      <entry key="H2" value="59.90862154116726" />
-      <entry key="H4" value="111.08283400398678" />
-      <entry key="D1" value="246.34443769605863" />
-      <entry key="W1" value="290.64098518789615" />
+      <entry key="MS100" value="1.0000000000000002" />
+      <entry key="MS500" value="1.0007138952384766" />
+      <entry key="S2" value="1.1634589185670947" />
+      <entry key="S5" value="1.484577727073924" />
+      <entry key="S10" value="1.6961161735471486" />
+      <entry key="S30" value="1.8862588291173938" />
+      <entry key="S60" value="1.941414723453055" />
+      <entry key="M2" value="1.9724707951630847" />
+      <entry key="M5" value="2.246101201790415" />
+      <entry key="M10" value="4.115629453458533" />
+      <entry key="M15" value="7.0275824930047115" />
+      <entry key="M30" value="15.99346473738377" />
+      <entry key="H1" value="31.652931003616015" />
+      <entry key="H2" value="61.356780267266686" />
+      <entry key="H4" value="114.2440775179843" />
+      <entry key="D1" value="260.13477287831506" />
+      <entry key="W1" value="309.59185367424664" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.000000000000082" />
-      <entry key="S10" value="1.0000002912282195" />
-      <entry key="S30" value="1.0082878849253372" />
-      <entry key="S60" value="1.1238140389933242" />
-      <entry key="M2" value="1.5416920635818037" />
-      <entry key="M5" value="2.6045597529001716" />
-      <entry key="M10" value="3.4756791377230494" />
-      <entry key="M15" value="3.8991898675853145" />
-      <entry key="M30" value="4.82577522678962" />
-      <entry key="H1" value="8.393837989415292" />
-      <entry key="H2" value="18.306090512575242" />
-      <entry key="H4" value="35.469623204508444" />
-      <entry key="D1" value="76.0952288102383" />
-      <entry key="W1" value="88.65607249601655" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="2.81471099876632E-191" />
+      <entry key="S5" value="8.30806134677733E-77" />
+      <entry key="S10" value="1.5940775272527835E-38" />
+      <entry key="S30" value="6.155675348962673E-13" />
+      <entry key="S60" value="1.5638404133587827E-6" />
+      <entry key="M2" value="0.002512686724118423" />
+      <entry key="M5" value="0.2370007067261452" />
+      <entry key="M10" value="1.4847895446307642" />
+      <entry key="M15" value="3.1489056873024857" />
+      <entry key="M30" value="7.498259363921626" />
+      <entry key="H1" value="13.76611300681312" />
+      <entry key="H2" value="24.93487889418926" />
+      <entry key="H4" value="43.21415323405087" />
+      <entry key="D1" value="88.01960859970507" />
+      <entry key="W1" value="102.3131759709754" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.005013382412355095" />
-      <entry key="MS500" value="0.34675774228290407" />
-      <entry key="S2" value="0.7685922439407095" />
-      <entry key="S5" value="1.0813030559632923" />
-      <entry key="S10" value="2.0276862648530796" />
-      <entry key="S30" value="4.719064766991622" />
-      <entry key="S60" value="6.432005404845786" />
-      <entry key="M2" value="8.589285615642549" />
-      <entry key="M5" value="12.820920053239396" />
-      <entry key="M10" value="16.43087475648939" />
-      <entry key="M15" value="18.67740398541994" />
-      <entry key="M30" value="24.52094992928572" />
-      <entry key="H1" value="40.308845911033146" />
-      <entry key="H2" value="78.20983385726693" />
-      <entry key="H4" value="146.54778171908134" />
-      <entry key="D1" value="322.43790984754344" />
-      <entry key="W1" value="379.2967613882008" />
+      <entry key="MS100" value="0.9726549474122858" />
+      <entry key="MS500" value="0.9951781505252061" />
+      <entry key="S2" value="1.1617340345621485" />
+      <entry key="S5" value="1.4836204702053368" />
+      <entry key="S10" value="1.6955495067226476" />
+      <entry key="S30" value="1.8860435607184731" />
+      <entry key="S60" value="1.9413048092558818" />
+      <entry key="M2" value="1.9749127117315806" />
+      <entry key="M5" value="2.482474939653026" />
+      <entry key="M10" value="5.597948892361221" />
+      <entry key="M15" value="10.172551575796804" />
+      <entry key="M30" value="23.486345185203678" />
+      <entry key="H1" value="45.41358935283739" />
+      <entry key="H2" value="86.28633960997689" />
+      <entry key="H4" value="157.45324980110234" />
+      <entry key="D1" value="348.15249473720786" />
+      <entry key="W1" value="411.90470937581904" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -121,29 +128,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.data_handler.executor": "Run",
-    "Python.signal_handler.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "E:/Code/simple_backtest",
-    "node.js.detected.package.jshint": "true",
-    "node.js.selected.package.jshint": "",
-    "nodejs_package_manager_path": "npm",
-    "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.data_handler.executor&quot;: &quot;Run&quot;,
+    &quot;Python.signal_handler.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Code/simple_backtest&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;python.packages.toolwindow.project.migrated.to.right.top.v2&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   },
-  "keyToStringList": {
-    "ChangesTree.GroupingKeys": [
-      "repository"
+  &quot;keyToStringList&quot;: {
+    &quot;ChangesTree.GroupingKeys&quot;: [
+      &quot;repository&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Code\simple_backtest" />

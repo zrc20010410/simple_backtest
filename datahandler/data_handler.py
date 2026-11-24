@@ -15,7 +15,7 @@ def _tushare_client():
 class DataHandler(ABSDataHandler):
     def __init__(self, symbol_list, start_date, end_date):
         super().__init__(symbol_list, start_date, end_date)
-        # self.data = self._read_data_from_csv()
+        self.data = self._read_data_from_csv()
 
     @staticmethod
     def save_data_to_csv(symbol_list, start_date, end_date):

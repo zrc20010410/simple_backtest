@@ -59,7 +59,8 @@ class Backtest(object):
                         if reason is None:
                             self.execution_handler.execute_order(event)
                         else:
-                            print(f"无效订单{event.datetime} {event.symbol} {event.signal_type} {event.quantity} 股：{reason}")
+                            action = getattr(event, "signal_type", event.direction)
+                            print(f"无效订单 {event.datetime} {event.symbol} {action} 数量 {event.quantity}：{reason}")
                     elif event.type == "FILL":
                         self.trade_log.record_fill(event)
 

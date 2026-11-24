@@ -1,6 +1,5 @@
-from datetime import datetime
 from math import isfinite
-
+from numbers import Integral
 
 class Event(object):
     """
@@ -14,7 +13,6 @@ class SignalEvent(Event):
     本类为 Signal 事件，由 Strategy 类产生。
     RiskManager 类接收 Signal 事件。
     """
-
     def __init__(self, datetime: str, symbol: str, direction: str, quantity: int, ):
         """
         datetime - Signal 产生的时间
@@ -30,6 +28,7 @@ class SignalEvent(Event):
         self.datetime = datetime
         self.direction = direction
         self.quantity = quantity
+
 
 class OptionSignalEvent(SignalEvent):
     def __init__(self, datetime: str, symbol: str, direction: str, quantity: int, *, signal_type: str, fill_time: str):
@@ -50,8 +49,7 @@ class FillEvent(Event):
     本类为 Fill 事件，由 Execution 类产生，Execution 类模拟交易的结果并产生 Fill 事件。
     Portfolio 类接收 Fill 事件。
     """
-
-    def __init__(self, datetime: datetime, symbol, exchange, quantity,
+    def __init__(self, datetime: str, symbol, exchange, quantity,
                  direction, fill_price, commission=None):
         """
         datetime - Fill 的时间
@@ -72,23 +70,30 @@ class FillEvent(Event):
         self.quantity = quantity
         self.direction = direction
         self.fill_price = fill_price
-
         if commission is None:
-            self.commission = calculate_commission(self.fill_price, self.quantity, self.direction)
-        else:
-            self.commission = commission
+            commission = calculate_commission(fill_price, quantity, direction)
+        self.commission = commission
 
 
 class OptionFillEvent(FillEvent):
-    def __init__(self, datetime, symbol, exchange, quantity, direction, fill_price, *, signal_type: str,
-                 commission: float, ):
+    """quantity 以手计，fee_per_contract 为元/手，commission 为本笔成交的总手续费。"""
+
+    def __init__(self, datetime: str, symbol, exchange, quantity: int, direction, fill_price,
+                 signal_type: str, commission: float | None = None, fee_per_contract: float | None = None):
         if signal_type not in ("OPEN", "CLOSE"):
             raise ValueError("signal_type 必须是 OPEN 或 CLOSE")
-        if commission is None or not isfinite(commission):
-            raise ValueError("期权成交必须明确提供有效的手续费")
+        if isinstance(quantity, bool) or not isinstance(quantity, Integral) or quantity <= 0:
+            raise ValueError("期权成交手数必须为正整数")
+        if commission is None:
+            if fee_per_contract is None:
+                if not symbol.upper().startswith("MO"):
+                    raise ValueError(f"请提供 {symbol} 的每手手续费或本笔总手续费")
+                fee_per_contract = 15.0
+            commission = int(quantity) * fee_per_contract
+        if not isfinite(commission) or commission < 0:
+            raise ValueError("期权手续费必须是有限非负数")
         super().__init__(
-            datetime, symbol, exchange, quantity, direction, fill_price,
-            commission=commission,
+            datetime, symbol, exchange, quantity, direction, fill_price, commission=commission,
         )
         self.signal_type = signal_type
 
