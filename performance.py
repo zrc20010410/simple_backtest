@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from math import isclose, sqrt
 from typing import Mapping
-from portfolio.portfolio import Snapshot
+from portfolio.abs_portfolio import Snapshot
 import pandas as pd
 
 from datahandler.data_handler import DEFAULT_INDEX_FILE

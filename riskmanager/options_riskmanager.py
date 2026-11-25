@@ -8,12 +8,10 @@ from .abs_riskmanager import RiskManager
 
 class OptionsRiskManager(RiskManager):
     def __init__(self, portfolio: OptionPortfolio):
-        self.portfolio = portfolio
+        super().__init__(portfolio)
 
     def risk_manager(self, signal: OptionSignalEvent) -> str | None:
         """校验信号、净持仓和成交时点的报价。通过返回 None，拒绝返回原因。"""
-        if not isinstance(signal, OptionSignalEvent):
-            return "需要期权交易信号"
         symbol, direction, quantity = signal.symbol, signal.direction, signal.quantity
         if symbol not in self.portfolio.positions:
             return f"{symbol} 不在回测期权池内"
@@ -26,13 +24,11 @@ class OptionsRiskManager(RiskManager):
         if isinstance(quantity, bool) or not isinstance(quantity, Integral) or quantity <= 0:
             return "期权手数必须为正整数"
 
-        position = self.portfolio.positions[symbol]
         if signal.signal_type == "CLOSE":
+            position = self.portfolio.positions[symbol]
             closable = max(0, -position if direction == "BUY" else position)
             if quantity > closable:
                 return f"可平持仓不足：可平 {closable} 手，申请 {quantity} 手"
-        elif (direction == "BUY" and position < 0) or (direction == "SELL" and position > 0):
-            return "同一合约反向开仓前须先平仓"
 
         try:
             price = self.portfolio.data_handler.get_value(symbol, signal.datetime, signal.fill_time.lower())

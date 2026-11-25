@@ -6,8 +6,7 @@ from datahandler.options_data_handler import OptionsDataHandler
 class OptionsExecutionHandler(ExecutionHandler):
 
     def __init__(self, events, data_handler: OptionsDataHandler):
-        self.events = events
-        self.data_handler = data_handler
+        super().__init__(events, data_handler)
 
     def execute_order(self, event: OptionSignalEvent):
         if event.type == 'SIGNAL':

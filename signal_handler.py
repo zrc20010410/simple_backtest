@@ -1,11 +1,11 @@
 from pathlib import Path
 import pandas as pd
-from event import SignalEvent
+from event import OptionSignalEvent, SignalEvent
 
-DEFAULT_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
-DEFAULT_STOCKS_DIR = DEFAULT_DATA_DIR / "stocks"
-DEFAULT_SIGNAL_DIR = DEFAULT_STOCKS_DIR / 'signals.csv'
+DEFAULT_DATA_DIR = Path(__file__).resolve().parents[0] / "data"
+DEFAULT_SIGNAL_DIR = DEFAULT_DATA_DIR / "signals"
 SIGNAL_COLUMNS = ["datetime", "symbol", "direction", "quantity"]
+OPTION_SIGNAL_COLUMNS = ["datetime", "symbol", "direction", "quantity", "signal_type", "fill_time"]
 
 class SignalHandler:
 
@@ -19,12 +19,15 @@ class SignalHandler:
 
     @staticmethod
     def save_signals_to_csv(signals: pd.DataFrame):
-        signals.to_csv(DEFAULT_SIGNAL_DIR, columns=SIGNAL_COLUMNS, index=False)
+        path = DEFAULT_SIGNAL_DIR / 'stocks / signals.csv'
+        signals.to_csv(path, columns=SIGNAL_COLUMNS, index=False)
 
     def read_signals_from_csv(self) -> dict[str, list[SignalEvent]]:
+        path = DEFAULT_SIGNAL_DIR / 'stocks / signals.csv'
+
         signals: dict[str, list[SignalEvent]] = {}
 
-        data = pd.read_csv(DEFAULT_SIGNAL_DIR, dtype={"datetime": str, "symbol": str})
+        data = pd.read_csv(path, dtype={"datetime": str, "symbol": str})
         for row in data.itertuples(index=False):
             signal = SignalEvent(
                 datetime=row.datetime,
@@ -37,16 +40,36 @@ class SignalHandler:
         return signals
 
 class OptionsSignalHandler:
+    """读取期权信号，按交易日分组并保留同日记录的顺序。"""
+    def __init__(self, path: str | Path | None = None):
+        self.path = DEFAULT_SIGNAL_DIR / "options/signals.csv" if path is None else Path(path)
+        self.signals = self.read_signals_from_csv()
 
-    def __init__(self, signals: pd.DataFrame | None = None, update_signals: bool = False):
-        pass
+        self.symbol_list: list[str] = sorted({
+            signal.symbol
+            for daily_signals in self.signals.values()
+            for signal in daily_signals
+        })
 
-    @staticmethod
-    def save_signals_to_csv(signals: pd.DataFrame):
-        pass
+    def read_signals_from_csv(self) -> dict[str, list[OptionSignalEvent]]:
+        data = pd.read_csv(
+            self.path, usecols=OPTION_SIGNAL_COLUMNS,
+            dtype={"datetime": str, "symbol": str},
+        )
 
-    def read_signals_from_csv(self) -> dict[str, list[SignalEvent]]:
-        pass
+        if data.isna().any().any():
+            raise ValueError(f"{self.path.name} 的期权信号含有缺失字段值")
+        dates = data["datetime"].str.replace("-", "", regex=False)
+        data["datetime"] = pd.to_datetime(dates, format="%Y%m%d").dt.strftime("%Y%m%d")
+
+        signals: dict[str, list[OptionSignalEvent]] = {}
+        for row in data.itertuples(index=False):
+            signal = OptionSignalEvent(
+                datetime=row.datetime, symbol=row.symbol, direction=row.direction,
+                quantity=row.quantity, signal_type=row.signal_type, fill_time=row.fill_time,
+            )
+            signals.setdefault(signal.datetime, []).append(signal)
+        return signals
 
 if __name__ == "__main__":
     signals = pd.DataFrame({

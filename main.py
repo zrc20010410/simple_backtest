@@ -1,34 +1,22 @@
-import pandas as pd
 from backtest import Backtest
+from signal_handler import SignalHandler, OptionsSignalHandler
 from datahandler.options_data_handler import OptionsDataHandler
-from signal_handler import SignalHandler
 from portfolio.options_portfolio import OptionPortfolio
-from riskmanager.simple_riskmanager import SimpleRiskManager
-from execution.simulated_execution import SimulatedExecutionHandler
-
+from riskmanager.options_riskmanager import OptionsRiskManager
+from execution.options_execution import OptionsExecutionHandler
 
 def main():
-    symbol_list = ['000001.SZ', '000011.SZ', '000025.SZ', '600519.SH']
-    start_date = '20260101'
-    end_date = '20260201'
-
-    signals = pd.DataFrame({
-        "datetime": ["20260105", "20260105", "20260105", "20260106", "20260107", "20260108", "20260108", "20260108", ],
-        "symbol": ["000001.SZ", "000011.SZ", "000025.SZ", "000001.SZ", "000001.SZ", "000001.SZ", "000011.SZ",
-                   "000025.SZ", ],
-        "direction": ["BUY", "BUY", "BUY", "BUY", "SELL", "SELL", "SELL", "SELL"],
-        "quantity": [10000, 20000, 10000, 30000, 30000, 10000, 10000, 5000, ],
-    })
+    start_date = '20230101'
+    end_date = '20261008'
 
     backtest = Backtest(
-        symbol_list=symbol_list, start_date=start_date, end_date=end_date,
-        init_capital=500000,
+        start_date=start_date, end_date=end_date, init_capital=1_000_000,
         data_handler=OptionsDataHandler,
-        signals_handler=SignalHandler(signals,True),
-        risk_manager=SimpleRiskManager,
-        execution_handler=SimulatedExecutionHandler,
+        signals_handler=OptionsSignalHandler(),
+        risk_manager=OptionsRiskManager,
+        execution_handler=OptionsExecutionHandler,
         portfolio=OptionPortfolio,
-        benchmark='399300.SZ',
+        benchmark='000852.SH',
     )
     backtest.run_backtest()
 

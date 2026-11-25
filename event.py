@@ -19,7 +19,6 @@ class SignalEvent(Event):
         symbol - 交易标的
         direction - 'BUY' or 'SELL'
         quantity - 交易数量
-        val_type - 'OPEN' or 'CLOSE'
         """
         if direction not in ("BUY", "SELL"):
             raise ValueError("signal_type 必须是 BUY 或 SELL")
@@ -36,8 +35,8 @@ class OptionSignalEvent(SignalEvent):
         signal_type - 开仓还是平仓 'OPEN' or 'CLOSE'
         fill_time - 交易开盘成交或收盘成交 'OPEN' or 'CLOSE'
         """
-        if signal_type and fill_time not in ("OPEN", "CLOSE"):
-            raise ValueError("signal_type 和 val_type 必须是 OPEN 或 CLOSE")
+        if signal_type not in ("OPEN", "CLOSE") or fill_time not in ("OPEN", "CLOSE"):
+            raise ValueError("signal_type 和 fill_time 必须是 OPEN 或 CLOSE")
 
         super().__init__(datetime, symbol, direction, quantity)
         self.fill_time = fill_time
@@ -77,21 +76,20 @@ class FillEvent(Event):
 
 class OptionFillEvent(FillEvent):
     """quantity 以手计，fee_per_contract 为元/手，commission 为本笔成交的总手续费。"""
-
     def __init__(self, datetime: str, symbol, exchange, quantity: int, direction, fill_price,
                  signal_type: str, commission: float | None = None, fee_per_contract: float | None = None):
-        if signal_type not in ("OPEN", "CLOSE"):
-            raise ValueError("signal_type 必须是 OPEN 或 CLOSE")
+
         if isinstance(quantity, bool) or not isinstance(quantity, Integral) or quantity <= 0:
             raise ValueError("期权成交手数必须为正整数")
         if commission is None:
             if fee_per_contract is None:
                 if not symbol.upper().startswith("MO"):
                     raise ValueError(f"请提供 {symbol} 的每手手续费或本笔总手续费")
-                fee_per_contract = 15.0
+                fee_per_contract = 50
             commission = int(quantity) * fee_per_contract
         if not isfinite(commission) or commission < 0:
             raise ValueError("期权手续费必须是有限非负数")
+
         super().__init__(
             datetime, symbol, exchange, quantity, direction, fill_price, commission=commission,
         )

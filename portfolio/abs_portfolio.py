@@ -1,19 +1,28 @@
 from abc import ABC, abstractmethod
-
-from datahandler.data_handler import DataHandler
+from dataclasses import dataclass
+from datahandler.abs_data_handler import ABSDataHandler
 from event import FillEvent
-from portfolio.portfolio import Snapshot
+
+@dataclass
+class Snapshot:
+    """单个交易日的账户快照。"""
+    positions: dict[str, float]
+    market_values: dict[str, float]
+    cash: float
+    total_commission: float
+    equity: float
 
 class ABSPortfolio(ABC):
     """账户公共状态。equity 和 market_values 表示最近一次收盘结果。"""
 
-    def __init__(self, events, data_handler: DataHandler, start_date, init_capital):
+    def __init__(self, events, data_handler: ABSDataHandler, start_date, init_capital):
         self.events = events
         self.data_handler = data_handler
         self.start_date = start_date
         self.init_capital = init_capital
         self.cash = init_capital
         self.total_commission = 0.0
+        self.positions = dict.fromkeys(data_handler.symbol_list, 0)
         self.history: dict[str, Snapshot] = {}
 
     @property

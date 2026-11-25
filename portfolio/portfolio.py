@@ -1,29 +1,13 @@
-from dataclasses import dataclass
 from datahandler.data_handler import DataHandler
 from event import FillEvent
+from portfolio.abs_portfolio import ABSPortfolio, Snapshot
 
-@dataclass
-class Snapshot:
-    """单个交易日的账户快照。"""
-    positions: dict[str, float]
-    market_values: dict[str, float]
-    cash: float
-    total_commission: float
-    equity: float
-
-class Portfolio:
+class Portfolio(ABSPortfolio):
 
     def __init__(self, events, data_handler: DataHandler, start_date, init_capital):
 
-        self.data_handler = data_handler
-        self.events = events
-        self.start_date = start_date
-        self.init_capital = init_capital
+        super().__init__(events, data_handler, start_date, init_capital)
 
-        self.positions = dict.fromkeys(data_handler.symbol_list, 0)
-        self.cash = init_capital
-        self.total_commission = 0.0
-        self.history: dict[str, Snapshot] = {}
 
     @property
     def market_values(self) -> dict[str, float]:

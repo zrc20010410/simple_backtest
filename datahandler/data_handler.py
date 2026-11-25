@@ -47,16 +47,6 @@ class DataHandler(ABSDataHandler):
 
         df.to_csv(DEFAULT_INDEX_FILE, index=False)
 
-    @staticmethod
-    def save_trade_dates_to_csv(start_date, end_date):
-        pro = _tushare_client()
-        # 保存交易日列表
-        calendar = pro.trade_cal(exchange="SSE", start_date=start_date, end_date=end_date)
-        trade_dates = sorted(
-            calendar.loc[calendar["is_open"].astype(str) == "1", "cal_date"].astype(str)
-        )
-        pd.DataFrame({"trade_date": trade_dates}).to_csv(DEFAULT_TRADE_DATES_FILE, index=False)
-
     def _read_data_from_csv(self):
 
         prices = pd.read_csv(DEFAULT_PRICE_FILE, dtype={"ts_code": str, "trade_date": str})
@@ -118,11 +108,10 @@ if __name__ == "__main__":
 
     symbol_list = ['000001.SZ', '000011.SZ','000025.SZ','600519.SH']
     # index_list = ['000001.SH', '399300.SZ', '000852.SH', '000688.SH']
-    index_list = ['399300.SZ']
+    index_list = ['000852.SH']
     start_date = '20230101'
     end_date = '20261008'
     # DataHandler.save_data_to_csv(symbol_list,start_date,end_date)
-    # DataHandler.save_indexes_to_csv(index_list,start_date,end_date)
-    DataHandler.save_trade_dates_to_csv(start_date,end_date)
+    DataHandler.save_indexes_to_csv(index_list,start_date,end_date)
 
 
