@@ -1,23 +1,29 @@
 import pandas as pd
 from event import OptionSignalEvent
-from pathlib import Path
-from signalhandler.abs_signal_handler import AbsSignalHandler, DEFAULT_SIGNAL_DIR
+from signalhandler.abstract_signal_handler import AbstractSignalHandler
+from config import DEFAULT_OPTION_DAILY_SIGNAL_FILE,DEFAULT_OPTION_MINUTE_SIGNAL_FILE
 
 OPTION_SIGNAL_COLUMNS = ["datetime", "symbol", "direction", "quantity", "signal_type", "fill_time"]
 
-class OptionsSignalHandler(AbsSignalHandler):
+class OptionsSignalHandler(AbstractSignalHandler):
     """读取期权信号，按交易日分组并保留同日记录的顺序。"""
-    def __init__(self, path: str | Path | None = None):
+
+    path = DEFAULT_OPTION_DAILY_SIGNAL_FILE
+
+    def __init__(self):
 
         super().__init__()
-        self.path = self.signal_dir / "options/signals.csv" if path is None else Path(path)
         self.signals = self.read_signals_from_csv()
+        self.symbol_list = self._get_symbol_list()
 
-        self.symbol_list: list[str] = sorted({
-            signal.symbol
-            for daily_signals in self.signals.values()
-            for signal in daily_signals
-        })
+    def _get_symbol_list(self) -> list[str]:
+        symbols: set[str] = set()
+        for daily_signals in self.signals.values():
+            for signal in daily_signals:
+                symbols.add(signal.symbol)
+
+        symbol_list = sorted(symbols)
+        return symbol_list
 
     def read_signals_from_csv(self) -> dict[str, list[OptionSignalEvent]]:
         data = pd.read_csv(

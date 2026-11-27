@@ -1,5 +1,9 @@
+import re
 from math import isfinite
 from numbers import Integral
+
+from config import FEE_PER_CONTRACT
+from utils.commission import Commission
 
 class Event(object):
     """
@@ -13,6 +17,7 @@ class SignalEvent(Event):
     本类为 Signal 事件，由 Strategy 类产生。
     RiskManager 类接收 Signal 事件。
     """
+
     def __init__(self, datetime: str, symbol: str, direction: str, quantity: int, ):
         """
         datetime - Signal 产生的时间
@@ -22,6 +27,9 @@ class SignalEvent(Event):
         """
         if direction not in ("BUY", "SELL"):
             raise ValueError("signal_type 必须是 BUY 或 SELL")
+        if isinstance(quantity, bool) or not isinstance(quantity, Integral) or quantity <= 0:
+            raise ValueError("quantity必须为正整数")
+
         self.type = 'SIGNAL'
         self.symbol = symbol
         self.datetime = datetime
@@ -33,21 +41,25 @@ class OptionSignalEvent(SignalEvent):
     def __init__(self, datetime: str, symbol: str, direction: str, quantity: int, *, signal_type: str, fill_time: str):
         """
         signal_type - 开仓还是平仓 'OPEN' or 'CLOSE'
-        fill_time - 交易开盘成交或收盘成交 'OPEN' or 'CLOSE'
+        fill_time - 交易时间，如"0930"、"1500"
         """
-        if signal_type not in ("OPEN", "CLOSE") or fill_time not in ("OPEN", "CLOSE"):
-            raise ValueError("signal_type 和 fill_time 必须是 OPEN 或 CLOSE")
+        if signal_type not in ("OPEN", "CLOSE"):
+            raise ValueError("signal_type 必须是 OPEN 或 CLOSE")
 
+        if (not isinstance(fill_time, str)
+                or not re.fullmatch(r"(?:[01][0-9]|2[0-3])[0-5][0-9]", fill_time)
+                or not ("0930" <= fill_time <= "1130" or "1300" <= fill_time <= "1500")):
+            raise ValueError("fill_time 必须在交易时段内，例如 '0930' 或 '1500'")
         super().__init__(datetime, symbol, direction, quantity)
         self.fill_time = fill_time
         self.signal_type = signal_type
-
 
 class FillEvent(Event):
     """
     本类为 Fill 事件，由 Execution 类产生，Execution 类模拟交易的结果并产生 Fill 事件。
     Portfolio 类接收 Fill 事件。
     """
+
     def __init__(self, datetime: str, symbol, exchange, quantity,
                  direction, fill_price, commission=None):
         """
@@ -70,22 +82,19 @@ class FillEvent(Event):
         self.direction = direction
         self.fill_price = fill_price
         if commission is None:
-            commission = calculate_commission(fill_price, quantity, direction)
+            commission = Commission.stock_commission(fill_price, quantity, direction)
         self.commission = commission
 
 
 class OptionFillEvent(FillEvent):
-    """quantity 以手计，fee_per_contract 为元/手，commission 为本笔成交的总手续费。"""
-    def __init__(self, datetime: str, symbol, exchange, quantity: int, direction, fill_price,
+    def __init__(self, datetime: str, symbol: str, exchange, quantity: int, direction: str, fill_price: float,
                  signal_type: str, commission: float | None = None, fee_per_contract: float | None = None):
 
-        if isinstance(quantity, bool) or not isinstance(quantity, Integral) or quantity <= 0:
-            raise ValueError("期权成交手数必须为正整数")
         if commission is None:
             if fee_per_contract is None:
                 if not symbol.upper().startswith("MO"):
                     raise ValueError(f"请提供 {symbol} 的每手手续费或本笔总手续费")
-                fee_per_contract = 50
+                fee_per_contract = FEE_PER_CONTRACT
             commission = int(quantity) * fee_per_contract
         if not isfinite(commission) or commission < 0:
             raise ValueError("期权手续费必须是有限非负数")
@@ -96,18 +105,3 @@ class OptionFillEvent(FillEvent):
         self.signal_type = signal_type
 
 
-def calculate_commission(fill_price: float, quantity: int, direction: str):
-    """
-    当未传入手续费时, 自动计算出一个手续费
-        手续费: 0.01%, 最低5块
-        印花税: 0.05%
-    """
-    min_commission = 5
-    commission_rate = 0.0001
-    stamp_tax_rate = 0.0005
-
-    commission = max(min_commission, commission_rate * (fill_price * quantity))
-    stamp_tax = stamp_tax_rate * (fill_price * quantity) if direction == 'SELL' else 0
-    total_cost = commission + stamp_tax
-
-    return total_cost

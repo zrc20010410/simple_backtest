@@ -2,50 +2,20 @@ import os
 import pandas as pd
 from datetime import date
 from math import isfinite
-from datahandler.abs_data_handler import ABSDataHandler,DEFAULT_DATA_DIR,DEFAULT_TRADE_DATES_FILE
+from datahandler.abstract_data_handler import AbstractDataHandler
+from config import DEFAULT_STOCK_DIR
 
-DEFAULT_STOCKS_DIR = DEFAULT_DATA_DIR / "stocks"
-DEFAULT_PRICE_FILE = DEFAULT_STOCKS_DIR / "prices.csv"
-DEFAULT_INDEX_FILE = DEFAULT_STOCKS_DIR / "indexes.csv"
+DEFAULT_PRICE_FILE = DEFAULT_STOCK_DIR / "prices.csv"
+DEFAULT_INDEX_FILE = DEFAULT_STOCK_DIR / "indexes.csv"
 
 def _tushare_client():
     import tushare as ts
     return ts.pro_api(os.environ["TUSHARE_TOKEN"])
 
-class DataHandler(ABSDataHandler):
+class DataHandler(AbstractDataHandler):
     def __init__(self, symbol_list, start_date, end_date):
         super().__init__(symbol_list, start_date, end_date)
         self.data = self._read_data_from_csv()
-
-    @staticmethod
-    def save_data_to_csv(symbol_list, start_date, end_date):
-        pro = _tushare_client()
-        # 保存股票行情信息
-        frames = []
-        for symbol in symbol_list:
-            data = (pro.daily(ts_code=symbol, start_date=start_date, end_date=end_date)
-                    .sort_values("trade_date", ascending=True, ignore_index=True))
-            if not data.empty:
-                frames.append(data)
-
-        df = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
-
-        df.to_csv(DEFAULT_PRICE_FILE, index=False)
-
-    @staticmethod
-    def save_indexes_to_csv(index_list, start_date, end_date):
-        pro = _tushare_client()
-        # 保存指数行情信息
-        frames = []
-        for index in index_list:
-            data = (pro.index_daily(ts_code=index, start_date=start_date, end_date=end_date)
-                    .sort_values("trade_date", ascending=True, ignore_index=True))
-            if not data.empty:
-                frames.append(data)
-
-        df = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
-
-        df.to_csv(DEFAULT_INDEX_FILE, index=False)
 
     def _read_data_from_csv(self):
 
@@ -103,6 +73,36 @@ class DataHandler(ABSDataHandler):
 
         latest_date = dates.loc[valid].max()
         return float(close.loc[valid & dates.eq(latest_date)].item())
+
+    @staticmethod
+    def save_data_to_csv(symbol_list, start_date, end_date):
+        pro = _tushare_client()
+        # 保存股票行情信息
+        frames = []
+        for symbol in symbol_list:
+            data = (pro.daily(ts_code=symbol, start_date=start_date, end_date=end_date)
+                    .sort_values("trade_date", ascending=True, ignore_index=True))
+            if not data.empty:
+                frames.append(data)
+
+        df = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+        df.to_csv(DEFAULT_PRICE_FILE, index=False)
+
+    @staticmethod
+    def save_indexes_to_csv(index_list, start_date, end_date):
+        pro = _tushare_client()
+        # 保存指数行情信息
+        frames = []
+        for index in index_list:
+            data = (pro.index_daily(ts_code=index, start_date=start_date, end_date=end_date)
+                    .sort_values("trade_date", ascending=True, ignore_index=True))
+            if not data.empty:
+                frames.append(data)
+
+        df = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+        df.to_csv(DEFAULT_INDEX_FILE, index=False)
 
 if __name__ == "__main__":
 

@@ -2,9 +2,9 @@ import re
 import pandas as pd
 from datetime import date
 from math import isfinite
-from datahandler.abs_data_handler import ABSDataHandler, DEFAULT_DATA_DIR, DEFAULT_INDEXES_DIR
+from datahandler.abstract_data_handler import AbstractDataHandler
+from config import DEFAULT_OPTION_DAILY_DIR
 from utils.mo_expiry import read_mo_expiry_dates
-DEFAULT_OPTIONS_DIR = DEFAULT_DATA_DIR / "options"
 
 _PRICE_FIELDS = {
     "open": "open_price",
@@ -13,12 +13,10 @@ _PRICE_FIELDS = {
     "pre_settle": "pre_settle_price",
 }
 
-
 def _date_to_str(value: str | int | date) -> str:
     return value.strftime("%Y%m%d") if isinstance(value, date) else str(value)
 
-
-class OptionsDataHandler(ABSDataHandler):
+class OptionsDataHandler(AbstractDataHandler):
 
     contract_multiplier = 100
     margin_adjustment = 0.12
@@ -35,9 +33,9 @@ class OptionsDataHandler(ABSDataHandler):
         quote_columns = ['instrument_id', 'open_price', 'close_price', 'settle_price', 'pre_settle_price']
         frames = []
         for trade_date in self.trade_dates:
-            path = DEFAULT_OPTIONS_DIR / f"{trade_date}.csv"
+            path = DEFAULT_OPTION_DAILY_DIR / f"{trade_date}.csv"
             if not path.is_file():
-                continue
+                break
             daily = pd.read_csv(path, usecols=quote_columns, dtype={"instrument_id": str})
             daily["trade_date"] = trade_date
             frames.append(daily)
@@ -46,17 +44,6 @@ class OptionsDataHandler(ABSDataHandler):
 
         prices = pd.concat(frames, ignore_index=True)[[*quote_columns, "trade_date"]]
         return {symbol: rows for symbol, rows in prices.groupby("instrument_id", sort=False)}
-
-    def _read_index_data_from_csv(self) -> pd.DataFrame:
-        """读取回测起止日期内的中证 1000 指数日线"""
-        index_data = pd.read_csv(
-            DEFAULT_INDEXES_DIR / "000852.csv",
-            dtype={"index_code": str, "trade_date": str},
-            na_values=["--"],
-        ).sort_values("trade_date")
-        index_data["pre_close"] = index_data["close"].shift(1)
-        in_period = index_data["trade_date"].between(self.start_date, self.end_date)
-        return index_data.loc[in_period].reset_index(drop=True)
 
     def get_value(self, symbol: str, datetime: str | int | date, value_type: str):
         trade_date = _date_to_str(datetime)

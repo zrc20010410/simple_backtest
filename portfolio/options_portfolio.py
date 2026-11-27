@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+
+from config import EXPIRED_FEE_PER_CONTRACT
 from datahandler.options_data_handler import OptionsDataHandler
 from event import FillEvent, OptionFillEvent
-from portfolio.abs_portfolio import ABSPortfolio, Snapshot
+from portfolio.abstract_portfolio import AbstractPortfolio, Snapshot
 from utils.mo_margin import mo_margin_per_contract
 
 
@@ -10,9 +12,18 @@ class OptionSnapshot(Snapshot):
     margin_used: float
     available_cash: float
 
+@dataclass(frozen=True)
+class OpeningRisk:
+    cash: float
+    margin_used: float
 
-class OptionPortfolio(ABSPortfolio):
+    @property
+    def available_cash(self) -> float:
+        return round(self.cash - self.margin_used, 2)
+
+class OptionsPortfolio(AbstractPortfolio):
     data_handler: OptionsDataHandler
+
     def __init__(self, events, data_handler: OptionsDataHandler, start_date, init_capital):
         super().__init__(events, data_handler, start_date, init_capital)
         self._margin_by_symbol = dict.fromkeys(self.positions, 0.0)
@@ -26,35 +37,22 @@ class OptionPortfolio(ABSPortfolio):
         return self.cash - self.total_margin
 
     def update_portfolio(self, event: FillEvent) -> None:
-        if event.type != "FILL":
-            return
 
         if not isinstance(event, OptionFillEvent):
             raise TypeError("OptionPortfolio 需要 OptionFillEvent")
 
         symbol = event.symbol
-        old = self.positions[symbol]
         quantity = event.quantity
+        old = self.positions[symbol]
         change = quantity if event.direction == "BUY" else -quantity
         new = old + change
         margin = self._margin_by_symbol[symbol]
 
-        if event.signal_type not in ("OPEN", "CLOSE"):
-            raise ValueError(f"未知的开平标志 {event.signal_type!r}")
-
-        closed = min(abs(old), quantity) if old * change < 0 else 0
-        opened = quantity - closed
-        if event.signal_type == "CLOSE" and opened:
-            raise ValueError(f"{symbol} 没有足够的相应持仓可平")
-
-        # 持有空仓
-        if old < 0 and closed:
-            margin *= (abs(old) - closed) / abs(old)
-
-        # 开空
-        if change < 0 and opened:
+        if event.signal_type == "CLOSE" and old < 0:
+            margin *= abs(new) / abs(old)
+        elif event.signal_type == "OPEN" and change < 0:
             inputs = self.data_handler.get_margin_inputs(symbol, event.datetime, at_open=True)
-            margin += opened * mo_margin_per_contract(**inputs)
+            margin += event.quantity * mo_margin_per_contract(**inputs)
 
         cost = round(change * event.fill_price * self.data_handler.contract_multiplier, 2)
         self.positions[symbol] = new
@@ -63,24 +61,34 @@ class OptionPortfolio(ABSPortfolio):
         self._margin_by_symbol[symbol] = margin
 
     def record_daily_snapshot(self, trade_date: str) -> None:
-
         self._settle_expired_positions(trade_date)
+        snapshot, margins = self._build_snapshot(trade_date, at_open=False)
+        self.history[trade_date] = snapshot
+        self._margin_by_symbol = margins
 
+    def get_position_margin(self, symbol: str) -> float:
+        """返回该合约当前实际占用的保证金，单位为元。"""
+        return self._margin_by_symbol[symbol]
+
+    def _build_snapshot(self, trade_date: str, *, at_open: bool,) -> tuple[OptionSnapshot, dict[str, float]]:
+        """构建开盘或盘后的快照"""
         market_values = dict.fromkeys(self.positions, 0.0)
         margins = dict.fromkeys(self.positions, 0.0)
         for symbol, quantity in self.positions.items():
             if quantity == 0:
                 continue
-            if quantity < 0:
-                inputs = self.data_handler.get_margin_inputs(symbol, trade_date)
+            if quantity < 0 :
+                inputs = self.data_handler.get_margin_inputs(symbol, trade_date, at_open = at_open)
                 margins[symbol] = -quantity * mo_margin_per_contract(**inputs)
-                settle = inputs["settle"]
+                price = (self.data_handler.get_value(symbol, trade_date, "open")
+                         if at_open else inputs["settle"])
             else:
-                settle = self.data_handler.get_value(symbol, trade_date, "settle")
-            market_values[symbol] = quantity * settle * self.data_handler.contract_multiplier
+                field = "open" if at_open else "settle"
+                price = self.data_handler.get_value(symbol, trade_date, field)
+            market_values[symbol] = quantity * price * self.data_handler.contract_multiplier
 
         margin_used = sum(margins.values())
-        self.history[trade_date] = OptionSnapshot(
+        snapshot = OptionSnapshot(
             positions=self.positions.copy(),
             market_values=market_values,
             cash=self.cash,
@@ -89,9 +97,10 @@ class OptionPortfolio(ABSPortfolio):
             margin_used=margin_used,
             available_cash=self.cash - margin_used,
         )
-        self._margin_by_symbol = margins
+        return snapshot, margins
 
-    def _settle_expired_positions(self, trade_date: str, fee_per_contract: float = 2.0) -> None:
+    def _settle_expired_positions(self, trade_date: str, fee_per_contract: float = EXPIRED_FEE_PER_CONTRACT) -> None:
+        """收盘清算"""
         settlements = []
 
         for symbol, quantity in self.positions.items():
@@ -119,3 +128,32 @@ class OptionPortfolio(ABSPortfolio):
             self.total_commission += fee
             self.positions[symbol] = 0
             self._margin_by_symbol[symbol] = 0.0
+
+    def record_daily_snapshot2(self, trade_date: str) -> None:
+
+        self._settle_expired_positions(trade_date)
+
+        market_values = dict.fromkeys(self.positions, 0.0)
+        margins = dict.fromkeys(self.positions, 0.0)
+        for symbol, quantity in self.positions.items():
+            if quantity == 0:
+                continue
+            if quantity < 0:
+                inputs = self.data_handler.get_margin_inputs(symbol, trade_date, at_open=False)
+                margins[symbol] = -quantity * mo_margin_per_contract(**inputs)
+                settle = inputs["settle"]
+            else:
+                settle = self.data_handler.get_value(symbol, trade_date, "settle")
+            market_values[symbol] = quantity * settle * self.data_handler.contract_multiplier
+
+        margin_used = sum(margins.values())
+        self.history[trade_date] = OptionSnapshot(
+            positions=self.positions.copy(),
+            market_values=market_values,
+            cash=self.cash,
+            total_commission=self.total_commission,
+            equity=self.cash + sum(market_values.values()),
+            margin_used=margin_used,
+            available_cash=self.cash - margin_used,
+        )
+        self._margin_by_symbol = margins

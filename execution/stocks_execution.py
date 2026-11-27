@@ -1,13 +1,13 @@
 from event import FillEvent, SignalEvent
-from .abs_execution import ExecutionHandler
-from datahandler.data_handler import DataHandler
+from execution.abstract_execution import AbstractExecutionHandler
+from datahandler.stocks_data_handler import DataHandler
+from portfolio.stocks_portfolio import StocksPortfolio
 
 
-class SimulatedExecutionHandler(ExecutionHandler):
+class StocksExecutionHandler(AbstractExecutionHandler):
 
-    def __init__(self, events, data_handler: DataHandler):
-        self.events = events
-        self.data_handler = data_handler
+    def __init__(self, events, data_handler: DataHandler, portfolio: StocksPortfolio):
+        super().__init__(events, data_handler, portfolio)
 
     def execute_order(self, event : SignalEvent):
         if event.type == 'SIGNAL':

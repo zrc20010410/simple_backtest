@@ -1,12 +1,12 @@
 from math import isfinite
 from numbers import Integral, Real
-from .abs_riskmanager import RiskManager
-from portfolio.portfolio import Portfolio
+from .abstract_riskmanager import AbstractRiskManager
+from portfolio.stocks_portfolio import StocksPortfolio
 from event import SignalEvent, calculate_commission
 
-class SimpleRiskManager(RiskManager):
-    def __init__(self, portfolio: Portfolio):
-        self.portfolio = portfolio
+class StocksRiskManager(AbstractRiskManager):
+    def __init__(self, portfolio: StocksPortfolio):
+        super().__init__(portfolio)
 
     def risk_manager(self, signal: SignalEvent) -> str | None:
         symbol, direction, quantity = signal.symbol, signal.direction, signal.quantity

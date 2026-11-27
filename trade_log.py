@@ -1,7 +1,6 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
-from math import isfinite
 from event import FillEvent, OptionFillEvent
 
 
@@ -20,18 +19,6 @@ class Trade:
     def amount(self) -> float:
         """成交金额，不含手续费。"""
         return self.quantity * self.fill_price
-
-
-@dataclass(frozen=True)
-class OptionTrade(Trade):
-    contract_multiplier: float
-    signal_type: str | None = None  # 兼容手工构造的旧 MOTrade；日志从成交事件填入开平标志。
-
-    @property
-    def amount(self) -> float:
-        """买卖双方均按正数记录权利金成交额（元），手续费单列。"""
-        return round(self.quantity * self.fill_price * self.contract_multiplier, 2)
-
 
 class TradeLog:
 
@@ -58,18 +45,25 @@ class TradeLog:
         self.trades.append(trade)
 
 
+@dataclass(frozen=True)
+class OptionTrade(Trade):
+    contract_multiplier: float
+    signal_type: str | None = None  # 兼容手工构造的旧 MOTrade；日志从成交事件填入开平标志。
+
+    @property
+    def amount(self) -> float:
+        """买卖双方均按正数记录权利金成交额（元），手续费单列。"""
+        return round(self.quantity * self.fill_price * self.contract_multiplier, 2)
+
+
 class OptionsTradeLog(TradeLog):
     def __init__(self, on_fill: Callable[[FillEvent], None], contract_multiplier: float):
         super().__init__(on_fill)
-        if not isfinite(contract_multiplier) or contract_multiplier <= 0:
-            raise ValueError("期权合约乘数必须为有限正数")
         self.contract_multiplier = contract_multiplier
 
     def _make_trade(self, event: FillEvent) -> OptionTrade:
         if not isinstance(event, OptionFillEvent):
             raise ValueError("OptionsTradeLog 只接受 OptionFillEvent")
-        if event.signal_type not in ("OPEN", "CLOSE"):
-            raise ValueError(f"未知的期权开平标志 {event.signal_type!r}")
         return OptionTrade(
             trade_time=event.datetime,
             symbol=event.symbol,

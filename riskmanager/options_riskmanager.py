@@ -1,28 +1,25 @@
 from math import isfinite
 from numbers import Integral, Real
 
-from event import OptionSignalEvent
-from portfolio.options_portfolio import OptionPortfolio
-from .abs_riskmanager import RiskManager
+from event import OptionSignalEvent, SignalEvent
+from portfolio.options_portfolio import OptionsPortfolio
+from .abstract_riskmanager import AbstractRiskManager
+from config import FEE_PER_CONTRACT
+from utils.mo_margin import mo_margin_per_contract
 
-
-class OptionsRiskManager(RiskManager):
-    def __init__(self, portfolio: OptionPortfolio):
+class OptionsRiskManager(AbstractRiskManager):
+    def __init__(self, portfolio: OptionsPortfolio):
         super().__init__(portfolio)
 
-    def risk_manager(self, signal: OptionSignalEvent) -> str | None:
+    def risk_manager(self, signal: SignalEvent) -> str | None:
         """校验信号、净持仓和成交时点的报价。通过返回 None，拒绝返回原因。"""
+        if not isinstance(signal, OptionSignalEvent):
+            raise TypeError("OptionPortfolio 需要 OptionFillEvent")
+
         symbol, direction, quantity = signal.symbol, signal.direction, signal.quantity
+
         if symbol not in self.portfolio.positions:
             return f"{symbol} 不在回测期权池内"
-        if direction not in ("BUY", "SELL"):
-            return "买卖方向须为 BUY 或 SELL"
-        if signal.signal_type not in ("OPEN", "CLOSE"):
-            return "开平标志须为 OPEN 或 CLOSE"
-        if signal.fill_time not in ("OPEN", "CLOSE"):
-            return "成交时点须为 OPEN 或 CLOSE"
-        if isinstance(quantity, bool) or not isinstance(quantity, Integral) or quantity <= 0:
-            return "期权手数必须为正整数"
 
         if signal.signal_type == "CLOSE":
             position = self.portfolio.positions[symbol]

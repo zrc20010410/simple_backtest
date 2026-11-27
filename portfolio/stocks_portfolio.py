@@ -1,8 +1,8 @@
-from datahandler.data_handler import DataHandler
+from datahandler.stocks_data_handler import DataHandler
 from event import FillEvent
-from portfolio.abs_portfolio import ABSPortfolio, Snapshot
+from portfolio.abstract_portfolio import AbstractPortfolio, Snapshot
 
-class Portfolio(ABSPortfolio):
+class StocksPortfolio(AbstractPortfolio):
 
     def __init__(self, events, data_handler: DataHandler, start_date, init_capital):
 

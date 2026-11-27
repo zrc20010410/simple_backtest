@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 from math import isclose, sqrt
 from typing import Mapping
-from portfolio.abs_portfolio import Snapshot
+from portfolio.abstract_portfolio import Snapshot
 import pandas as pd
-
-from datahandler.data_handler import DEFAULT_INDEX_FILE
+from config import DEFAULT_DATA_DIR
+DEFAULT_INDEX_FILE = DEFAULT_DATA_DIR / "stocks"/ "indexes.csv"
 
 class PerformanceReport:
 

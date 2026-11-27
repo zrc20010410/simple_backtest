@@ -4,27 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf5c7f3f-4027-4c08-96aa-bd6ee6d69d44" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/backtest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/indexes.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/price_20260101_20260401.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/prices.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/signals.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_handler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datahandler/abs_data_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/datahandler/abs_data_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datahandler/data_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/datahandler/data_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event.py" beforeDir="false" afterPath="$PROJECT_DIR$/event.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event_v2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/execution/options_execution.py" beforeDir="false" afterPath="$PROJECT_DIR$/execution/options_execution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mo_datahandler_v2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mo_margin_v2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/performance.py" beforeDir="false" afterPath="$PROJECT_DIR$/performance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/portfolio.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/riskmanager/options_riskmanager.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskmanager/options_riskmanager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trade_log_v2.py" beforeDir="false" />
-    </list>
+    <list default="true" id="cf5c7f3f-4027-4c08-96aa-bd6ee6d69d44" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,61 +39,61 @@
 }</component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000000000002" />
-      <entry key="MS500" value="1.0007138952384766" />
-      <entry key="S2" value="1.1634589185670947" />
-      <entry key="S5" value="1.484577727073924" />
-      <entry key="S10" value="1.6961161735471486" />
-      <entry key="S30" value="1.8862588291173938" />
-      <entry key="S60" value="1.941414723453055" />
-      <entry key="M2" value="1.9724707951630847" />
-      <entry key="M5" value="2.246101201790415" />
-      <entry key="M10" value="4.115629453458533" />
-      <entry key="M15" value="7.0275824930047115" />
-      <entry key="M30" value="15.99346473738377" />
-      <entry key="H1" value="31.652931003616015" />
-      <entry key="H2" value="61.356780267266686" />
-      <entry key="H4" value="114.2440775179843" />
-      <entry key="D1" value="260.13477287831506" />
-      <entry key="W1" value="309.59185367424664" />
+      <entry key="MS100" value="1.0000000000001068" />
+      <entry key="MS500" value="1.0025452092761002" />
+      <entry key="S2" value="1.224610923947496" />
+      <entry key="S5" value="1.5502655824031781" />
+      <entry key="S10" value="1.7417988827245252" />
+      <entry key="S30" value="1.9054914874610427" />
+      <entry key="S60" value="1.976288211007352" />
+      <entry key="M2" value="2.3139035978197278" />
+      <entry key="M5" value="4.537727328342503" />
+      <entry key="M10" value="8.632144322657219" />
+      <entry key="M15" value="12.025799208923628" />
+      <entry key="M30" value="20.87730474562994" />
+      <entry key="H1" value="40.30322133215006" />
+      <entry key="H2" value="74.48826374094284" />
+      <entry key="H4" value="117.7526838695481" />
+      <entry key="D1" value="356.4020023756256" />
+      <entry key="W1" value="752.2804514505771" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="2.81471099876632E-191" />
-      <entry key="S5" value="8.30806134677733E-77" />
-      <entry key="S10" value="1.5940775272527835E-38" />
-      <entry key="S30" value="6.155675348962673E-13" />
-      <entry key="S60" value="1.5638404133587827E-6" />
-      <entry key="M2" value="0.002512686724118423" />
-      <entry key="M5" value="0.2370007067261452" />
-      <entry key="M10" value="1.4847895446307642" />
-      <entry key="M15" value="3.1489056873024857" />
-      <entry key="M30" value="7.498259363921626" />
-      <entry key="H1" value="13.76611300681312" />
-      <entry key="H2" value="24.93487889418926" />
-      <entry key="H4" value="43.21415323405087" />
-      <entry key="D1" value="88.01960859970507" />
-      <entry key="W1" value="102.3131759709754" />
+      <entry key="MS500" value="1.480924169073274E-216" />
+      <entry key="S2" value="1.209629692393891E-54" />
+      <entry key="S5" value="4.606960750055144E-22" />
+      <entry key="S10" value="4.460347465391656E-11" />
+      <entry key="S30" value="0.0013032417674099634" />
+      <entry key="S60" value="0.11285808401984353" />
+      <entry key="M2" value="1.1766507623261129" />
+      <entry key="M5" value="5.933367637637724" />
+      <entry key="M10" value="12.246187133960744" />
+      <entry key="M15" value="16.58134806592544" />
+      <entry key="M30" value="23.852665276322973" />
+      <entry key="H1" value="30.881825047585767" />
+      <entry key="H2" value="38.80796190024771" />
+      <entry key="H4" value="48.19250454598924" />
+      <entry key="D1" value="129.7337895059159" />
+      <entry key="W1" value="274.86694878885805" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9726549474122858" />
-      <entry key="MS500" value="0.9951781505252061" />
-      <entry key="S2" value="1.1617340345621485" />
-      <entry key="S5" value="1.4836204702053368" />
-      <entry key="S10" value="1.6955495067226476" />
-      <entry key="S30" value="1.8860435607184731" />
-      <entry key="S60" value="1.9413048092558818" />
-      <entry key="M2" value="1.9749127117315806" />
-      <entry key="M5" value="2.482474939653026" />
-      <entry key="M10" value="5.597948892361221" />
-      <entry key="M15" value="10.172551575796804" />
-      <entry key="M30" value="23.486345185203678" />
-      <entry key="H1" value="45.41358935283739" />
-      <entry key="H2" value="86.28633960997689" />
-      <entry key="H4" value="157.45324980110234" />
-      <entry key="D1" value="348.15249473720786" />
-      <entry key="W1" value="411.90470937581904" />
+      <entry key="MS100" value="0.9138314502294005" />
+      <entry key="MS500" value="0.9821733161033815" />
+      <entry key="S2" value="1.0717081210503858" />
+      <entry key="S5" value="1.3552994306241757" />
+      <entry key="S10" value="1.596677753217288" />
+      <entry key="S30" value="1.8434760066292784" />
+      <entry key="S60" value="2.052042758379876" />
+      <entry key="M2" value="3.456501189866606" />
+      <entry key="M5" value="10.431177293075246" />
+      <entry key="M10" value="20.839746104177713" />
+      <entry key="M15" value="28.572242574843404" />
+      <entry key="M30" value="44.70407435462747" />
+      <entry key="H1" value="71.16717707995626" />
+      <entry key="H2" value="113.28410392162807" />
+      <entry key="H4" value="165.93722062625784" />
+      <entry key="D1" value="486.13252055611457" />
+      <entry key="W1" value="1027.1464733863381" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -128,42 +108,80 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.data_handler.executor&quot;: &quot;Run&quot;,
-    &quot;Python.signal_handler.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Code/simple_backtest&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;python.packages.toolwindow.project.migrated.to.right.top.v2&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.backtest.executor": "Run",
+    "Python.data_handler.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.signal_handler.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/code/simple_backtest-main/portfolio",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ChangesTree.GroupingKeys&quot;: [
-      &quot;repository&quot;
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "repository"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\simple_backtest-main\portfolio" />
       <recent name="E:\Code\simple_backtest" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\Code\simple_backtest\test" />
-      <recent name="E:\Code\simple_backtest" />
+      <recent name="D:\code\simple_backtest-main\backtest" />
+      <recent name="D:\code\simple_backtest-main\data\stocks\daily" />
+      <recent name="D:\code\simple_backtest-main\data\common" />
+      <recent name="D:\code\simple_backtest-main\data\stocks\daily\signals" />
+      <recent name="D:\code\simple_backtest-main\data\stocks" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="stocks_data_handler" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="simple_backtest" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="~\AppData\Local\Programs\Python\Python315\python.exe" />
+      <option name="WORKING_DIRECTORY" value="D:\code\simple_backtest-main" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="RUN_TOOL" value="" />
+      <option name="RUN_AS_SCRIPT" value="false" />
+      <option name="SCRIPT_NAME" value="D:\code\simple_backtest-main\datahandler\stocks_data_handler.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-3c73f5f83ce7-5c0e4880bfa8-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.12573.39" />
+        <option value="bundled-python-sdk-34611be1ca5a-e0583fc556d1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-263.7307.206" />
       </set>
     </attachedChunks>
   </component>
@@ -174,6 +192,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1795235319861</updated>
+      <workItem from="1795569249729" duration="76521000" />
     </task>
     <servers />
   </component>
@@ -202,5 +221,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/simple_backtest_main$backtest.coverage" NAME="backtest Coverage Results" MODIFIED="1795684015676" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/simple_backtest_main$data_handler.coverage" NAME="data_handler Coverage Results" MODIFIED="1795596978075" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="D:\code\simple_backtest-main" />
+    <SUITE FILE_PATH="coverage/simple_backtest_main$main.coverage" NAME="main Coverage Results" MODIFIED="1795762825342" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

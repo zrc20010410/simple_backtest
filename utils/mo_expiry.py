@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 import pandas as pd
 
-from datahandler.abs_data_handler import DEFAULT_TRADE_DATES_FILE
+from datahandler.abstract_data_handler import DEFAULT_TRADE_DATES_FILE
 
 
 def read_mo_expiry_dates() -> dict[str, str]:
